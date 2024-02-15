@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: debug-cli
+  name: debug-cli
+  namespace: mathieu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: debug-cli
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: debug-cli
+    spec:
+      containers:
+      - image: busybox
+        name: busybox
+        resources: {}
+        command:
+          - sleep
+          - infinity
+status: {}

@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  creationTimestamp: null
+  labels:
+    app: exo1-dep
+  name: exo1-dep
+  namespace: mathieu
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: exo1-dep
+  strategy: {}
+  template:
+    metadata:
+      creationTimestamp: null
+      labels:
+        app: exo1-dep
+    spec:
+      initContainers:
+      - image: busybox
+        name: init-busy
+        command:
+          - sh
+          - -c
+          - 'echo $firstname'
+        envFrom:
+          - configMapRef:
+              name: exo2-configmap
+      containers:
+      - image: nginx:latest
+        name: nginx
+        resources: 
+          requests:
+            cpu: 20m
+            memory: 12Mi
+          limits:
+            cpu: 30m
+            memory: 16Mi
+        ports:
+          - containerPort: 80
+        envFrom:
+          - configMapRef:
+              name: exo2-configmap
+
+status: {}
