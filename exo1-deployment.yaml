@@ -18,16 +18,23 @@ spec:
       labels:
         app: exo1-dep
     spec:
+      volumes:
+        - name: mypvc
+          persistentVolumeClaim:
+            claimName: gp2-claim-1 
       initContainers:
       - image: busybox
         name: init-busy
         command:
           - sh
           - -c
-          - 'echo $firstname'
+          - 'echo $firstname; echo $firstname >> /data/myfile; date >> /data/myfile; cat /data/myfile'
         envFrom:
           - configMapRef:
               name: exo2-configmap
+        volumeMounts:
+          - name: mypvc
+            mountPath: /data
       containers:
       - image: nginx:latest
         name: nginx
@@ -40,6 +47,9 @@ spec:
             memory: 16Mi
         ports:
           - containerPort: 80
+        volumeMounts:
+          - name: mypvc
+            mountPath: /data
         envFrom:
           - configMapRef:
               name: exo2-configmap
